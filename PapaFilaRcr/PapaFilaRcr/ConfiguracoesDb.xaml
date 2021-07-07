@@ -5,11 +5,6 @@
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <StackLayout>
-            <Label 
-                Text="Informe as configurações para conexão com o banco de dados"
-                HorizontalOptions="CenterAndExpand"
-                FontSize="Large" 
-                FontAttributes="Bold" />
             <Entry Placeholder="IP Servidor" MaxLength="15" x:Name="ip" Completed="Ip_Completed" />
             <Entry Placeholder="Porta" MaxLength="8" x:Name="porta" Keyboard="Numeric" Completed="Porta_Completed"  />
             <Entry Placeholder="Nome do banco" MaxLength="20" x:Name="nomebanco" Completed="Nomebanco_Completed" />

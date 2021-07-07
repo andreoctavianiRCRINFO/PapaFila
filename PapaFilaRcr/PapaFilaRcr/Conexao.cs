@@ -147,6 +147,25 @@ namespace PapaFilaRcr
             }
         }
 
+        public static void criaTabelaConfEtiqBal()
+        {
+            try
+            {
+                //cria uma pasta base local para o dispositivo
+                var pasta = new LocalRootFolder();
+                //cria o arquivo
+                var arquivo = pasta.CreateFile(DbFileName, CreationCollisionOption.OpenIfExists);
+                //abre o BD
+                sqliteconnection = new SQLiteConnection(arquivo.Path);
+                //cria a tabela no BD
+                sqliteconnection.CreateTable<ConfEtiqBal>();
+            }
+            catch (Exception e)
+            {
+                erroSqlLite = e.ToString();
+            }
+        }
+
         //pegar dados configuração banco de dados no sqlLite
         public List<ConfDb> GetConfigData()
         {

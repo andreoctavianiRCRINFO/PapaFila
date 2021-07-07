@@ -29,7 +29,7 @@ namespace PapaFilaRcr
         }
         private void Configuracoes(object sender, EventArgs e)
         {
-            Detail.Navigation.PushAsync(new ConfiguracoesDb());
+            Detail.Navigation.PushAsync(new Configuracoes() { Title = "Configurações" });
             IsPresented = false;
         }
     }

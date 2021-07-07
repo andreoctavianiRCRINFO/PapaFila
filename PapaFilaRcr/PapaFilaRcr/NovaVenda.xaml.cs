@@ -26,10 +26,10 @@ namespace PapaFilaRcr
 
         private void OpenScanner(object sender, EventArgs e)
         {
-            Scanner();
+            Scanner(sender, e);
         }
 
-        public async void Scanner()
+        public async void Scanner(object sender, EventArgs e)
         {
 
             var ScannerPage = new ZXingScannerPage();
@@ -52,7 +52,7 @@ namespace PapaFilaRcr
                 {
                     Navigation.PopAsync();
                     codbarras.Text = result.Text;
-                    quantidade.Focus();
+                    Codbarras_Completed(sender, e);
                 });
             };
 
@@ -62,11 +62,104 @@ namespace PapaFilaRcr
         }
 
         private void Codbarras_Completed(object sender, EventArgs e)
-        {
-            if (codbarras.Text == "")
+        {   
+            //verifica se campo codbarras está vazio
+            if (string.IsNullOrEmpty(codbarras.Text))
             {
                 DisplayAlert("Papa Fila", "Informe o código de barras", "Ok");
                 codbarras.Focus();
+            }
+            //verifica se código de barras informado é um código de balança
+            else if (codbarras.Text.Length == 13 && codbarras.Text.Substring(0, 1) == "2")
+            {
+                try
+                {
+                    int QtdeDigitos = 0;
+                    string DigitoVerificador = "";
+                    string PesoValor = "";
+                    string CodigoProduto = "";
+                    decimal ValorProduto;
+                    decimal PesoProduto;
+
+                    Conexao.conexaoSqlLite();
+                    var table = Conexao.sqliteconnection.Table<ConfEtiqBal>();
+                    foreach (var valor in table)
+                    {
+                        QtdeDigitos = valor.NumeroDigitos;
+                        DigitoVerificador = valor.ImprimeDigito;
+                        PesoValor = valor.ImprimePesoPreco;                        
+                    }
+
+                    //caso dígito verificador não seja impresso na etiqueta faz o cálculo
+                    if(DigitoVerificador == "N")
+                    {
+                        CodigoProduto = codbarras.Text.Substring(1, QtdeDigitos); // = 7089                        
+                        int coluna1 = 0;
+                        int coluna2 = Convert.ToInt32(CodigoProduto[0].ToString());//7                        
+                        int coluna3 = Convert.ToInt32(CodigoProduto[1].ToString());//0                        
+                        int coluna4 = Convert.ToInt32(CodigoProduto[2].ToString());//8                        
+                        int coluna5 = Convert.ToInt32(CodigoProduto[3].ToString());//9                        
+                        int somaColunasImpares = coluna3 + coluna5;// = 0 + 9 = 9                        
+                        int somaColunasPares = coluna2 + coluna4;// = 7 + 8 = 15                        
+                        double resultado = (somaColunasImpares * 3) + somaColunasPares;// = (9 * 3) + 15 = 42                         
+                        double dezena = Math.Ceiling(resultado / 10) * 10;// = (Math.Ceiling(42 / 10) = 4,2 = 5) * 10 = 50                         
+                        double digitoVerificador = dezena - resultado;// = 50 - 42 = 8
+                        //caso digito verificador seja 10, o valor do DV deverá assumir 0
+                        if(digitoVerificador == 10)
+                        {
+                            digitoVerificador = 0;
+                        }
+                        string CodigoComDigito = CodigoProduto + digitoVerificador;// = 70898
+                        CodigoProduto = CodigoComDigito.PadLeft(13, '0');// = 0000000070898
+                        //DisplayAlert("teste", CodigoProduto, "ok");
+                    }
+                    else
+                    {
+                        CodigoProduto = codbarras.Text.Substring(1, QtdeDigitos);
+                    }
+
+                    //verifica se é impresso o peso ou valor do produto na etiqueta
+                    //caso seja impresso o peso atribui o peso no campo quantidade
+
+                    if(PesoValor == "P")
+                    {                        
+                        PesoProduto = Convert.ToDecimal(codbarras.Text.Substring(7, 5));
+                        quantidade.Text = PesoProduto.ToString("#0,000").Replace(".",",");
+                        //atribui código do produto extraido da etiqueta da balança ao campo codbarras
+                        codbarras.Text = CodigoProduto;
+                        Quantidade_Completed(sender, e);
+                    }
+                    else
+                    {
+                        //busca valor do produto na base sql para fazer o cálculo da quantidade
+                        SqlCommand buscaValor = new SqlCommand("select ValorVenda from Produto where CodFabrica = '" + CodigoProduto + "'", Conexao.conn);
+                        SqlDataReader drValor = buscaValor.ExecuteReader();
+                        drValor.Read();
+
+                        if (!drValor.HasRows)
+                        {
+                            drValor.Close();
+                            DisplayAlert("Papa Fila", "Item não localizado", "Ok");
+                            codbarras.Focus();
+                            drValor.Close();
+                        }
+                        else
+                        {
+                            decimal PrecoProduto = Convert.ToDecimal(codbarras.Text.Substring(7, 5)) / 100;                            
+                            ValorProduto = Convert.ToDecimal(drValor.GetDecimal(0).ToString("N2"));                            
+                            PesoProduto = PrecoProduto / ValorProduto;
+                            //atribui código do produto extraido da etiqueta da balança ao campo codbarras
+                            codbarras.Text = CodigoProduto;
+                            quantidade.Text = PesoProduto.ToString("N3").Replace(".",",");
+                            drValor.Close();
+                            Quantidade_Completed(sender, e);
+                        }                        
+                    }                    
+                }
+                catch (Exception ex)
+                {
+                    DisplayAlert("Papa Fila", ex.ToString(), "Ok");
+                }                
             }
             else
             {
@@ -76,7 +169,7 @@ namespace PapaFilaRcr
 
         private void Quantidade_Completed(object sender, EventArgs e)
         {
-            if (quantidade.Text == "" || Convert.ToDouble(quantidade.Text) == 0)
+            if (string.IsNullOrEmpty(quantidade.Text) || Convert.ToDouble(quantidade.Text) == 0)
             {
                 DisplayAlert("Papa Fila", "Informe a quantidade", "Ok");
             }

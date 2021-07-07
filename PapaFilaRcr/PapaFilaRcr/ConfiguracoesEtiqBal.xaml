@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PapaFilaRcr.ConfiguracoesEtiqBal">
+    <ContentPage.Content>
+        <StackLayout>
+            <Entry x:Name="digitos" Placeholder="Quantidade dígitos cód. balança" Keyboard="Numeric" Completed="Entry_Completed" />
+            <Picker SelectedIndexChanged="Digverificador_SelectedIndexChanged" x:Name="digverificador" Title="Imprime díg. verificador?" SelectedItem="{Binding SelectedColorName, Mode=TwoWay}">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>S</x:String>
+                        <x:String>N</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <Picker SelectedIndexChanged="Pesovalor_SelectedIndexChanged" x:Name="pesovalor" Title="Imprime peso ou valor?" SelectedItem="{Binding SelectedColorName, Mode=TwoWay}">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>P</x:String>
+                        <x:String>V</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <Button IsEnabled="False" Clicked="Salvar_Clicked" Text="Salvar Configurações" x:Name="salvar" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

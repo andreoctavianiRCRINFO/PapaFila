@@ -100,6 +100,7 @@ namespace PapaFilaRcr
             else
             {
                 Conexao.criaTabelaConfDb();
+                Conexao.criaTabelaConfEtiqBal();
                 Conexao.criaTabelaHistoricoc();
                 Conexao.criaTabelaHistoricod();
                 if(Conexao.erroSqlLite.Length > 0)
@@ -113,7 +114,7 @@ namespace PapaFilaRcr
                 insere.nomebanco = nomebanco.Text;
                 insere.usuario = usuario.Text;
                 insere.senha = senha.Text;
-                Conexao.sqliteconnection.Insert(insere);
+                Conexao.sqliteconnection.InsertOrReplace(insere);
                 DisplayAlert("Papa Fila", "Configuração gravada", "Ok");
             }
             Conexao.Desconecta();
