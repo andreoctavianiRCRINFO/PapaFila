@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PapaFilaRcr.Menu">
+    <MasterDetailPage.Master>
+        <ContentPage Title="Menu" Padding="0">
+            <ContentPage.Content>
+                <StackLayout>
+                    <Grid BackgroundColor="#03A9F4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="80"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="10"/>
+                        </Grid.RowDefinitions>
+                        <Image Grid.Column="1" Grid.Row="1" Source="iconemin.png" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+                        <Label
+                          Grid.Column="1"
+                          Grid.Row="2"
+                          Text="Papa Fila"
+                          TextColor="White" FontSize="Large"/>
+                    </Grid>
+                    
+                    <TableView Intent="Menu">
+                        <TableSection>
+                            <ViewCell Tapped="NovaVenda">
+                                <StackLayout Padding="15,10">
+                                    <Label Text="Nova venda" VerticalTextAlignment="Center"/>
+                                </StackLayout>
+                            </ViewCell>
+
+                            <ViewCell Tapped="Historico">
+                                <StackLayout Padding="15,10">
+                                    <Label Text="Histórico de Lançamentos" VerticalTextAlignment="Center"/>
+                                </StackLayout>
+                            </ViewCell>
+
+                            <ViewCell Tapped="Configuracoes">
+                                <StackLayout Padding="15,10">
+                                    <Label Text="Configurações" VerticalTextAlignment="Center"/>
+                                </StackLayout>
+                            </ViewCell>
+                        </TableSection>
+                    </TableView>
+                </StackLayout>
+            </ContentPage.Content>
+        </ContentPage>
+    </MasterDetailPage.Master>
+</MasterDetailPage>

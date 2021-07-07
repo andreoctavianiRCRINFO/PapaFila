@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
+             x:Class="PapaFilaRcr.NovaVenda">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Ler Código" Clicked="OpenScanner" Order="Primary" Icon="codbarras.png" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="" x:Name="total" FontSize="40" TextColor="White" FontAttributes="Bold" BackgroundColor="Black" HorizontalTextAlignment="Center" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Entry Grid.Row="0" Grid.Column="0" Placeholder="Código de barras" MaxLength="14" x:Name="codbarras" Keyboard="Numeric" Completed="Codbarras_Completed" />
+                <Entry Grid.Row="0" Grid.Column="1" Placeholder="Quantidade" MaxLength="6" x:Name="quantidade" Keyboard="Numeric" Completed="Quantidade_Completed" />
+            </Grid>
+
+            <ListView x:Name="produtos" ItemsSource="{Binding Items}" CachingStrategy="RecycleElement" SeparatorColor="DarkGray">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell Height="80">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding item}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.RowSpan="2" FontSize="20" TextColor="White" BackgroundColor="#03A9F4" Grid.Column="0" Grid.Row="0" FontAttributes="Bold" />
+                                <Label Text="{Binding descricao}" Grid.Column="1" Grid.Row="0" FontAttributes="Bold" />
+                                <Label Text="{Binding marca}" Grid.Column="2" Grid.Row="0" FontAttributes="Bold" />
+                                <StackLayout Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                                    <Label Text="{Binding preco}" Grid.Column="1" Grid.Row="1" TextColor="Blue" />
+                                    <Label Text="{Binding quantidade}" Grid.Column="2" Grid.Row="1" TextColor="Blue" />
+                                    <Label Text="{Binding total}" Grid.Column="3" Grid.Row="1" TextColor="Blue" />
+                                </StackLayout>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Text="Finalizar" TextColor="White" Grid.Row="0" Grid.Column="0" VerticalOptions="End" BackgroundColor="#03A9F4" Clicked="Button_Clicked" />
+                <Button Text="Cancelar" TextColor="White" Grid.Row="0" Grid.Column="1" VerticalOptions="End" BackgroundColor="OrangeRed" Clicked="Cancelar_Clicked" />
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PapaFilaRcr.Historico">
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView ItemTapped="OnItemSelected" x:Name="historicoc" ItemsSource="{Binding HistoricoC}" CachingStrategy="RecycleElement" SeparatorColor="DarkGray">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell CommandParameter="{Binding id}" FlyoutItem.IsVisible="True" Text="{Binding numero}" Detail="{Binding datahora}" TextColor="Black" DetailColor="Blue" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
